@@ -1,4 +1,5 @@
 var ExifImage = require('exif').ExifImage;
+var path = require("path");
 
 const filename = 'examples/shibuya.jpg'
 // const filename = 'examples/buddha.jpg'
@@ -39,9 +40,11 @@ function getNewName(filename) {
     })
 }
 
-async function rename(filename) {
-    const r = await getNewName(filename)
-    console.log('R ', r)
+async function rename(origPath) {
+    const newName = await getNewName(origPath)
+    console.log(path.basename(origPath))
+    const newPath = origPath.replace(path.basename(origPath), newName)
+    console.log(origPath, ' -> ', newPath)
 }
 
 rename(filename)
