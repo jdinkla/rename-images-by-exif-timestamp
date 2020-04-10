@@ -3,7 +3,8 @@ var ExifImage = require('exif').ExifImage;
 const filename = 'examples/shibuya.jpg'
 // const filename = 'examples/buddha.jpg'
 
-function makeName(createDate) {
+
+function transformName(createDate) {
     var result = null
     if (createDate) {
         let date, time
@@ -17,26 +18,32 @@ function makeName(createDate) {
     return result
 }
 
-function getName(filename) {
-    try {
-        new ExifImage({ image: filename }, function (error, exifData) {
-            if (error) {
-                console.log('Error: ' + error.message);
-            } else {
-                const createDate = exifData.exif.CreateDate
-                if (createDate) {
-                    console.log('found exif CreateDate ' + createDate)
-                    const newName = makeName(createDate)
-                    console.log(filename, ' -> ', newName)
-                    // TODO rename file
+function getNewName(filename) {
+    return new Promise((resolve, reject) => {
+        try {
+            new ExifImage({ image: filename }, function (error, exifData) {
+                if (error) {
+                    reject(error)
                 } else {
-                    console.log("ErrorY: exif CreateDate is empty")
+                    const createDate = exifData.exif.CreateDate
+                    if (createDate) {
+                        resolve(transformName(createDate))
+                    } else {
+                        reject("Error: exif CreateDate is empty")
+                    }
                 }
-            }
-        });
-    } catch (error) {
-        console.log('ErrorXX: ' + error.message);
-    }
+            });
+        } catch (error) {
+            reject(error)
+        }
+    })
 }
 
-getName(filename)
+async function rename(filename) {
+    const r = await getNewName(filename)
+    console.log('R ', r)
+}
+
+rename(filename)
+
+
