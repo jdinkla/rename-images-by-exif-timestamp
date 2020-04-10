@@ -6,20 +6,16 @@ const filename = 'examples/shibuya.jpg'
 
 
 function transformName(createDate) {
-    var result = null
     if (createDate) {
-        let date, time
-        [date, time] = createDate.split(' ')
-        let yyyy, mm, dd
-        [yyyy, mm, dd] = date.split(':')
-        let hh, min, ss
-        [hh, min, ss] = time.split(':')
-        result = yyyy + '-' + mm + '-' + dd + ' ' + hh + '.' + min + '.' + ss + '.jpg'
+        let [date, time] = createDate.split(' ')
+        let [yyyy, mm, dd] = date.split(':')
+        let [hh, min, ss] = time.split(':')
+        return  yyyy + '-' + mm + '-' + dd + ' ' + hh + '.' + min + '.' + ss + '.jpg'
     }
-    return result
+    return null
 }
 
-function getNewName(filename) {
+function getNameFromExif(filename) {
     return new Promise((resolve, reject) => {
         try {
             new ExifImage({ image: filename }, function (error, exifData) {
@@ -41,9 +37,9 @@ function getNewName(filename) {
 }
 
 async function rename(origPath) {
-    const newName = await getNewName(origPath)
-    console.log(path.basename(origPath))
-    const newPath = origPath.replace(path.basename(origPath), newName)
+    const origName = path.basename(origPath)
+    const newName = await getNameFromExif(origPath)
+    const newPath = origPath.replace(origName, newName)
     console.log(origPath, ' -> ', newPath)
 }
 
