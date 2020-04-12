@@ -1,10 +1,7 @@
 const ExifImage = require('exif').ExifImage;
 const path = require("path");
 const fs = require('fs');
-
-const filename = 'examples/shibuya.jpg'
-// const filename = 'examples/buddha.jpg'
-
+const log = require('loglevel');
 
 function transformName(createDate) {
     if (createDate) {
@@ -16,19 +13,16 @@ function transformName(createDate) {
     return null
 }
 
-function getNameFromExif(filename) {
+function getCreateDateFromExif(filename) {
     return new Promise((resolve, reject) => {
         try {
             new ExifImage({ image: filename }, function (error, exifData) {
                 if (error) {
                     reject(error)
+                } else if (exifData.exif.CreateDate) {
+                    resolve(exifData.exif.CreateDate)
                 } else {
-                    const createDate = exifData.exif.CreateDate
-                    if (createDate) {
-                        resolve(transformName(createDate))
-                    } else {
-                        reject("Error: exif CreateDate is empty")
-                    }
+                    reject("Error: exif CreateDate is empty")
                 }
             });
         } catch (error) {
@@ -36,15 +30,6 @@ function getNameFromExif(filename) {
         }
     })
 }
-
-async function rename(origPath) {
-    const origName = path.basename(origPath)
-    const newName = await getNameFromExif(origPath)
-    const newPath = origPath.replace(origName, newName)
-    console.log(origPath, ' -> ', newPath)
-    // TODO rename
-}
-
 
 function traverse(filePath) {
     var result = []
@@ -62,15 +47,17 @@ function traverse(filePath) {
 }
 
 // var directoryPath = "D:\\tmp\\2005\\200509"
-var directoryPath = "D:\\tmp\\"
+var directoryPath = "D:\\tmp\\2010"
 
-const files = traverse(directoryPath)
+log.setLevel(log.levels.DEBUG)
 
-process.exit(0)
-
-files.forEach( async filePath => {
-    console.log("found " + filePath)
-    await rename(filePath).catch(err => {
-        console.log("Error for " + filePath + ': ' + err)
-    })
+traverse(directoryPath).forEach( async filePath => {
+    log.debug("found " + filePath)
+    try {
+        var createDate = await getCreateDateFromExif(filePath)
+        var newPath = transformName(createDate)
+        log.info(filePath, ' -> ', newPath)
+    } catch (error) {
+        log.error('ERROR:', filePath, ':',  error.message)
+    }
 })

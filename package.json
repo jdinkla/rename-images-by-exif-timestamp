@@ -9,7 +9,8 @@
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "exif": "^0.6.0"
+  "dependencies": {
+    "exif": "^0.6.0",
+    "loglevel": "^1.6.7"
   }
 }
