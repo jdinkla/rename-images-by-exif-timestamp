@@ -46,24 +46,31 @@ async function rename(origPath) {
 }
 
 
-function traverse(filePath, f) {
-    console.log('traverse', filePath)
+function traverse(filePath) {
+    var result = []
     if (fs.statSync(filePath).isDirectory()) {
         const files = fs.readdirSync(filePath)
         files.forEach(function(file) {
             const newPath = path.join(filePath, file)
-            traverse(newPath, f)
+            const filesInSubFolder = traverse(newPath)
+            result = result.concat(filesInSubFolder)
         });
     } else {
-        f(filePath)
+        result = [filePath]
     }
+    return result
 }
 
-var directoryPath = "D:\\tmp\\2005"
+// var directoryPath = "D:\\tmp\\2005\\200509"
+var directoryPath = "D:\\tmp\\"
 
-traverse(directoryPath, async filePath => {
+const files = traverse(directoryPath)
+
+process.exit(0)
+
+files.forEach( async filePath => {
     console.log("found " + filePath)
-    await rename(filePath)
+    await rename(filePath).catch(err => {
+        console.log("Error for " + filePath + ': ' + err)
+    })
 })
-
-
