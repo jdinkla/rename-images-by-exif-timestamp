@@ -1,5 +1,6 @@
-var ExifImage = require('exif').ExifImage;
-var path = require("path");
+const ExifImage = require('exif').ExifImage;
+const path = require("path");
+const fs = require('fs');
 
 const filename = 'examples/shibuya.jpg'
 // const filename = 'examples/buddha.jpg'
@@ -41,8 +42,28 @@ async function rename(origPath) {
     const newName = await getNameFromExif(origPath)
     const newPath = origPath.replace(origName, newName)
     console.log(origPath, ' -> ', newPath)
+    // TODO rename
 }
 
-rename(filename)
+
+function traverse(filePath, f) {
+    console.log('traverse', filePath)
+    if (fs.statSync(filePath).isDirectory()) {
+        const files = fs.readdirSync(filePath)
+        files.forEach(function(file) {
+            const newPath = path.join(filePath, file)
+            traverse(newPath, f)
+        });
+    } else {
+        f(filePath)
+    }
+}
+
+var directoryPath = "D:\\tmp\\2005"
+
+traverse(directoryPath, async filePath => {
+    console.log("found " + filePath)
+    await rename(filePath)
+})
 
 
