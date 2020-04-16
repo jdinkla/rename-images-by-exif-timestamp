@@ -4,14 +4,14 @@ Some older cameras used cryptic filenames like "DSCN1893.JPG" as filenames and w
 
 Luckily the timestamp of the creation is often available as [exif metadata](https://en.wikipedia.org/wiki/Exif) in the file itself. Here is an excerpt of this data showing the `CreateDate` timestmap.
 
-```json
+```js
 ...
  exif: {
     ExposureTime: 0.00625,
     FNumber: 3,
     ExposureProgram: 2,
     ISO: 50,
-    ExifVersion: <Buffer 30 32 32 30>,
+    ExifVersion: '<Buffer 30 32 32 30>',
     DateTimeOriginal: '2006:06:04 10:21:12',
     CreateDate: '2006:06:04 10:21:12',
 ...    
@@ -39,3 +39,5 @@ $ npm ci
 $ npm run renameSingle FILENAME.JPG
 $ npm run renameFolder /path/to/folder
 ```
+
+The execution may take a while, especially on old hard drives. So please be patiented and wait until the process has stopped by itself.
