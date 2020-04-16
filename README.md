@@ -1,8 +1,11 @@
-# rename images according to EXIF timestamp
+# Rename images according to EXIF timestamp
 
+Some older cameras used cryptic filenames like "DSCN1893.JPG" as filenames and when sorting photos you have no idea in what folder to put this file.
 
+Luckily the timestamp of the creation is often available as [exif metadata](https://en.wikipedia.org/wiki/Exif) in the file itself. Here is an excerpt of this data showing the `CreateDate` timestmap.
 
 ```json
+...
  exif: {
     ExposureTime: 0.00625,
     FNumber: 3,
@@ -11,20 +14,28 @@
     ExifVersion: <Buffer 30 32 32 30>,
     DateTimeOriginal: '2006:06:04 10:21:12',
     CreateDate: '2006:06:04 10:21:12',
+...    
 ```
 
-```json
- exif: {
-    ExposureTime: 0.04,
-    FNumber: 1.7,
-    ExposureProgram: 2,
-    ISO: 250,
-    ExifVersion: <Buffer 30 32 32 30>,
-    DateTimeOriginal: '2018:03:06 20:59:40',
-    CreateDate: '2018:03:06 20:59:40',
+This file would be renamed into '2006-06-04 10.21.12.jpg'.
+
+But renaming files by hand is tedious, so I wrote a utility for it.
+
+## Prerequisites
+
+[Node](https://nodejs.org/en/) is required. See the [installation instructions](https://nodejs.org/en/download/package-manager/).
+
+## Installation
+
+```bash
+$ git clone https://github.com/jdinkla/rename-images-by-exif-timestamp.git
+$ cd rename-images-by-exif-timestamp
+$ npm ci
 ```
 
+## Usage
 
-```
-2018-03-06 20.59.26.jpg
+```bash
+$ npm run renameSingle FILENAME.JPG
+$ npm run renameFolder /path/to/folder
 ```

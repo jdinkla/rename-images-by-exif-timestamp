@@ -1,14 +1,13 @@
 {
-  "name": "renameimages",
+  "name": "rename-images-by-exif-timestamp",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Rename image(s) by exif timestamp information",
   "scripts": {
     "test": "standard",
     "folder": "node renameFolder.js",
     "single": "node renameSingle.js"
   },
-  "author": "",
+  "author": "Jörn Dinkla",
   "license": "ISC",
   "dependencies": {
     "exif": "^0.6.0",
