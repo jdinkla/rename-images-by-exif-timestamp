@@ -36,8 +36,8 @@ $ npm ci
 ## Usage
 
 ```bash
-$ npm run renameSingle FILENAME.JPG
-$ npm run renameFolder /path/to/folder
+$ npm run single FILENAME.JPG
+$ npm run folder /path/to/folder
 ```
 
 The execution may take a while, especially on old hard drives. So please be patiented and wait until the process has stopped by itself.
