@@ -6,7 +6,7 @@ const rename = require('./rename')
 log.setLevel(log.levels.DEBUG)
 
 function traverse (filePath) {
-  var result = []
+  let result = []
   if (fs.statSync(filePath).isDirectory()) {
     const files = fs.readdirSync(filePath)
     files.forEach(function (file) {
